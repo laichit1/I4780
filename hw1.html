@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+
+<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<div>
+		<img src="https://i.imgur.com/omX5Drl.png" style="position:absolute;top:10vw;left:0vw;width:70vw;z-index:-1">
+		<div id="CM" style="position:absolute;left:30vw;">
+			<button >Change Mode</button>
+		</div>
+	</div>
+<script>
+
+var mode=0;
+class Light {
+  constructor() {
+    this.element = document.createElement ('div');
+    this.element.id = 'light';
+    this.element.style.cssText = "position:absolute;width:20px;height:20px;border-radius:15px;z-index:1"; 
+    var rdtop = (Math.random()*70)+1;
+    var rdleft = (Math.random()*55)+1;
+    if(rdtop<10 || rdtop >65) rdtop = (Math.random()*70)+1;
+    if(rdleft<10 || rdleft >55) rdleft = (Math.random()*55)+1;
+	  this.element.style.top = rdtop+'vw';
+    this.element.style.left = rdleft+'vw';
+    this.element.style.background = "hsl(89, 43%, 51%)";
+    document.getElementsByTagName('body')[0].appendChild(this.element);
+    
+  }
+	changeColor() {
+    var self = this;
+  	var hue = Math.random()*1000;
+  	self.element.style.background = "hsl(" + hue + ", 80%, 70%)"; 
+    var ot;
+    if(mode==0) ot=50;
+    if(mode==1) ot=500;
+    setTimeout (function() { self.changeColor() } , ot);
+  }
+
+}
+
+////////////////////////////////
+$( "#CM" ).click(function() {
+  mode++;
+  if(mode>1) {
+  mode =0;
+  }
+  console.log(mode);
+});
+for(var i=0;i<50;i++){
+init();
+}
+
+function init() {
+  var light = new Light();
+  light.changeColor();
+}
+
+
+</script>
+</body>
+
+</html>
