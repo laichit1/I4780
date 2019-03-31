@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css">
+		#info {
+  			position: absolute;
+  			top: 0px;
+  			width: 100%;
+  			padding: 10px;
+  			text-align: center;
+  			color: #ffff00
+		}
+		body {
+  			overflow: hidden;
+		}
+	</style>
+	<div id="info">金正恩小會堂</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
+	<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+</head>
+
+<body>
+<script>
+	var camera, scene, renderer;
+
+init();
+animate();
+
+function init() {
+  scene = new THREE.Scene();
+
+  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
+  camera.position.set(0,5,150);
+  camera.lookAt(new THREE.Vector3());
+
+  light = new THREE.PointLight(0xffffff);
+  light.position.set(100, 400, 200);
+  scene.add(light);
+
+  var gridXZ = new THREE.GridHelper(500, 20, 'red', 'white');
+  //scene.add(gridXZ);
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x888888);
+
+  let controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+  document.body.appendChild(renderer.domElement);
+  ///////////////////////////////////////////////////////////
+  let wall = new THREE.Mesh(new THREE.BoxGeometry(500, 200, 10), new THREE.MeshPhongMaterial());
+  scene.add(wall);
+  wall.position.set(0, 100, -245);
+  
+  
+  let wall3 = new THREE.Mesh(new THREE.BoxGeometry(150, 100, 10), new THREE.MeshPhongMaterial());
+  scene.add(wall3);
+  wall3.position.set(170, 50, 245);
+  
+  
+  let wall4 = new THREE.Mesh(new THREE.BoxGeometry(150, 100, 10), new THREE.MeshPhongMaterial());
+  scene.add(wall4);
+  wall4.position.set(170, 50, 100);
+  let wall7 = wall4.clone();
+  wall7.position.set(-170, 50, 100)
+  scene.add(wall7);
+  let wall8 = wall4.clone();
+  wall8.position.set(-170, 50, 245)
+  scene.add(wall8);
+  
+  let wall5 = new THREE.Mesh(new THREE.BoxGeometry(150, 20, 10), new THREE.MeshPhongMaterial());
+  wall5.rotation.y = Math.PI / -2;
+  scene.add(wall5);
+  wall5.position.set(100, 90, 170);
+  let wall9 = wall5.clone();
+  scene.add(wall9);
+  wall9.position.set(-100, 90, 170);
+    
+  
+  let wall6 = new THREE.Mesh(new THREE.BoxGeometry(150, 60, 10), new THREE.MeshPhongMaterial());
+  wall6.rotation.y = Math.PI / -2;
+  scene.add(wall6);
+  wall6.position.set(100, 30, 170);
+  let wall10 = wall6.clone();
+  scene.add(wall10);
+  wall10.position.set(-100, 30, 170);
+  
+  
+  let wall1 = new THREE.Mesh(new THREE.BoxGeometry(500, 100, 10), new THREE.MeshPhongMaterial());
+  wall1.rotation.y = Math.PI / 2
+  scene.add(wall1);
+  wall1.position.set(245, 50, 0);
+  
+  
+  let wall2 = new THREE.Mesh(new THREE.BoxGeometry(500, 100, 10), new THREE.MeshPhongMaterial());
+  wall2.rotation.y = Math.PI / 2
+  scene.add(wall2);
+  wall2.position.set(-245, 50, 0);
+  
+  let chair = new THREE.Group();
+    let ch = new THREE.Mesh(new THREE.BoxGeometry(150, 5, 20), new THREE.MeshPhongMaterial());
+  ch.position.set(0, 20, 0);
+ let ch1 = new THREE.Mesh(new THREE.BoxGeometry(5, 20, 20), new THREE.MeshPhongMaterial());
+ ch1.position.set(72.5,10,0)
+ let ch2 = ch1.clone();
+ ch2.position.set(-72.5,10,0)
+ chair.add(ch);
+ chair.add(ch1);
+ chair.add(ch2);
+ chair.position.set(100,0,-100)
+ scene.add(chair);
+ let chair1 = chair.clone();
+ chair1.position.set(-100,0,-100)
+scene.add(chair1); 
+//////////////////////////////////
+  let fo = new THREE.Mesh(new THREE.BoxGeometry(500, 1, 500), new THREE.MeshPhongMaterial());
+  scene.add(fo);
+  let loader = new THREE.TextureLoader();
+  loader.crossOrigin = ''
+  let texture = loader.load("http://img.chinatimes.com/newsphoto/2017-02-27/656/20170227004184.jpg"); // 570x713
+  let paint = new THREE.Mesh(new THREE.PlaneGeometry(257.0, 171.3), new THREE.MeshPhongMaterial({
+    map: texture
+  }));
+  paint.position.set(0, 110, -239);
+  scene.add(paint)
+  texture = loader.load("https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Flag_of_North_Korea.svg/2880px-Flag_of_North_Korea.svg.png");
+  let paint1 = new THREE.Mesh(new THREE.PlaneGeometry(80.0, 50), new THREE.MeshPhongMaterial({
+    map: texture
+  }));
+  paint1.position.set(190, 150, -239);
+  let paint2 = paint1.clone();
+  paint2.position.set(-190, 150, -239);
+  scene.add(paint1);
+  scene.add(paint2);
+  
+  texture = loader.load("http://218.16.125.44/img/20170722/131451849470604252.jpg");
+  let fo1 = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshPhongMaterial({
+    map: texture
+  }));
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set( 10, 10 );
+  fo1.position.set(0,1,0);
+  fo1.rotation.x = Math.PI / -2;
+  scene.add(fo1);
+  
+  
+    texture = loader.load("https://i.imgur.com/LPIiiqz.jpg");
+  let pr1 = new THREE.Mesh(new THREE.PlaneGeometry(120, 70), new THREE.MeshPhongMaterial({
+    map: texture
+  }));
+  pr1.rotation.y = Math.PI / 2 ;
+  pr1.position.set(-239,50,172.5);
+  scene.add(pr1);
+  texture = loader.load("https://i.imgur.com/ghtWqhD.jpg");
+  let pr2 = new THREE.Mesh(new THREE.PlaneGeometry(120, 70), new THREE.MeshPhongMaterial({
+    map: texture
+  }));
+  pr2.rotation.y = Math.PI / -2 ;
+  pr2.position.set(239,50,172.5);
+  scene.add(pr2);
+  
+  
+  ////////////////////////////////////////
+  
+  spotLight = new THREE.SpotLight(0xffffff);
+  spotLight.position.set(0, 100, 50);
+  spotLight.angle = 0.6;
+  spotLight.penumbra = 0.9;
+  spotLight.decay = 0.4;
+  spotLight.target = paint;
+  scene.add(spotLight);
+  
+  let sl = spotLight.clone();
+  sl.position.set(0,200,50);
+  sl.angle = 0.3;
+  sl.penumbra = 0.5;
+  sl.decay = 0.4;
+  sl.target = pr2;
+  scene.add(sl);
+  
+  
+  let sl2 = spotLight.clone();
+  sl2.position.set(0,200,50);
+  sl2.angle = 0.3;
+  sl2.penumbra = 0.5;
+  sl2.decay = 0.4;
+  sl2.target = pr1;
+  scene.add(sl2);
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  render();
+}
+
+function render() {
+  renderer.render(scene, camera);
+}
+
+</script>
+</body>
+
+</html>
