@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<canvas id="canvas" width="400" height="400"></canvas>
+</head>
+
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<audio id="collisionsound" style="display:none">
+		<source src="collision3.wav" type='audio/wav'>
+	</audio>
+<script>
+	var playv = true;
+	var vall =30;
+	collisionSound = document.getElementById ('collisionsound');
+
+	function rgchange(val){
+		if(val>=1&&val<=150){
+			$.get( "http://127.0.0.1:1337/api?argv="+val,function(data){
+				qq(val);
+				if(data && data.output){
+					 if(data.output==1){
+					 	if(playv==true) collisionSound.play();
+					 	document.getElementById("ans").innerHTML= 'Bang Bang Bang';
+					 }else{
+					 	document.getElementById("ans").innerHTML= 'Safe';
+					 }
+				}
+			});
+		}else{
+			alert("半徑超過設定值！");
+		}
+    }
+    function qq(val){
+			var canvas = document.getElementById('canvas'),
+    		ctx = canvas.getContext('2d');
+    		ctx.fillStyle = 'red';
+    		ctx.fillRect(0,0,400,400);
+    		ctx.fillStyle = 'white';
+    		ctx.fillRect(10,10,380,380);
+    		ctx.fillStyle = 'blue';
+    		ctx.fillRect(200,250,150,100);
+    		ctx.fillStyle = 'yellow';
+    		ctx.beginPath();
+			ctx.arc(200,200,val,0,2*Math.PI);
+			ctx.stroke();
+    		ctx.fill();
+    	}
+
+	function chp(){
+		if(playv==true){
+			document.getElementById("chpr").src = 'cross.gif';
+		}else{
+			document.getElementById("chpr").src = 'check.gif';
+		}
+	}
+</script>
+<div id="canvas" style="float:left;">
+	<div style="float:right;">
+		<form>
+			Radius<br>
+			<input id="crange" type="range" min="1" max="150" step="1" value="30" onchange="rgchange(this.value)">
+			<br>
+			Sound<br>
+			<img id="chpr" src="cross.gif" onclick="playv = !playv;chp()" >
+		</form>
+	<span id='ans'></span>
+	</div>
+</div>
+<script> qq(30);</script>
+
+
+</body>
+
+</html>
