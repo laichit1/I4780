@@ -1,0 +1,18 @@
+{
+  "name": "hw4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main-mac.js",
+  "dependencies": {
+    "express": "^4.15.2",
+    "gcc": "^1.0.2",
+    "shelljs": "^0.7.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main-mac.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
