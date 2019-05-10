@@ -4,6 +4,7 @@ by Clifford A. Shaffer
 from "Graphics Gems", Academic Press, 1990
 */
 
+
 #include "GraphicsGems.h"
 #include <stdio.h>
 #include <stdlib.h>
