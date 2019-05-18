@@ -1,0 +1,285 @@
+<!doctype html>
+<html>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <head>
+    <title>Socket.IO chat</title>
+<style>
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font: 13px Helvetica, Arial;
+}
+
+form {
+  background: #000;
+  padding: 3px;
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+}
+
+form input {
+  border: 0;
+  padding: 10px;
+  width: 80.4vw;
+}
+
+form button {
+  width: 9vw;
+  background: rgb(130, 224, 255);
+  border: none;
+  padding: 10px;
+}
+
+#messages {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#messages li {
+  padding: 5px 10px;
+}
+
+#messages li:nth-child(odd) {
+  background: #eee;
+}
+
+#messages {
+  margin-bottom: 40px
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  top: -5px;
+  right: 105%; 
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.son {
+  width: 200px;
+  height: 20px;
+  position: fixed;
+  border-radius: 999em;
+  background: #2ae0dd;
+  display: ;
+}
+
+.soff {
+  width: 200px;
+  height: 20px;
+  position: fixed;
+  border-radius: 999em;
+  background: #f76565;
+  display: ;
+}
+
+.d {
+  display: none;
+}
+
+</style>
+  </head>
+  <body onunload="col()">
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
+    <audio id="msgin" style="display:none">
+    <source src="msg.mp3" type='audio/mpeg'>
+    </audio>
+
+    <audio id="msgout" style="display:none">
+    <source src="out.mp3" type='audio/mpeg'>
+    </audio>
+
+    <audio id="login" style="display:none">
+    <source src="on.mp3" type='audio/mpeg'>
+    </audio>
+
+    <script type="text/javascript">
+      var msginv = document.getElementById ('msgin');
+      var msgoutv = document.getElementById ('msgout');
+      var loginv = document.getElementById ('login');
+      var socket = io.connect ('http://localhost');
+      let name1 = document.location.search.match(/\?name=(.+)/)[1];
+      let name = decodeURIComponent(name1);
+      var lastmsg ;
+      if(name.length < 3){
+          alert("名稱長度必須大於2")
+          document.location.href="http://127.0.0.1:1337";
+      }else{
+              socket.emit('onmsg',name);
+              socket.on("cheakname",function (error) {
+                if(error==404){
+                alert("名字重複了喔喔喔喔！！");
+                document.location.href="http://127.0.0.1:1337";
+              }
+            });
+          }
+
+    </script>
+    <div style="text-align: right;">在線人數:<span style="text-align: right;" id="online">0</span>
+      &nbsp;&nbsp;&nbsp;<div class="tooltip" onmouseover="socket.emit('getuser')">看看誰在這
+        <span class="tooltiptext" id="getuser"></span></div>
+    </div>
+    <div class="d" id = "showon" style="text-align: center;top:3%;left: 45%;">
+      <span id="onmsg"></span>
+    </div>
+    <ul id="messages"></ul>
+    <form >
+      <button id="delform" type="button">Del</button> <input id="m" autocomplete="off"> <button id="msgform">Send</button>
+    </form>
+    <script>
+      listval=0;
+      $(function () {
+        
+        socket.emit('disconnect');
+        socket.on("disconnect", function (onmsg) {
+          alert("伺服器關掉了喔喔喔");
+          document.location.href="http://127.0.0.1:1337";
+        });
+        socket.on("onmsg", function (onmsg) {
+                document.getElementById("showon").className = 'son';
+                document.getElementById("onmsg").innerText = onmsg;
+                loginv.currentTime=0;
+                loginv.play();
+                setTimeout( function (){document.getElementById("showon").className = 'd'},3000);
+            });
+
+        //socket.emit('loadmsg');
+        socket.on("loadmsg", function (msglist) {
+          while(listval < msglist.length){
+          var tet = msglist[listval].split(":")
+          if(tet[0].trim()==name){
+            $('#messages').append($('<li style="text-align:right;">').text("我  :  "+tet[1]));
+          }else{
+            $('#messages').append($('<li>').text(msglist[listval]));
+
+            }
+          window.scrollTo(0, document.body.scrollHeight);
+          listval++;
+        }
+            });
+        
+        socket.on("offmsg", function (seeyou) {
+                document.getElementById("showon").className = 'soff';
+                document.getElementById("onmsg").innerText = seeyou;
+                loginv.currentTime=0;
+                loginv.play();
+                setTimeout( function (){document.getElementById("showon").className = 'd'},3000);
+            });
+
+        socket.on("online", function (val) {
+                document.getElementById("online").innerText = val;
+            });
+
+        socket.on("inbox", function (msg,err) {
+          if(err=="fine"){
+          $('#messages').append($('<li>').text(msg));
+          }else if(err == "fail"){
+          $('#messages').append($('<li style="text-align:right;">').text(msg));
+          }
+          msginv.currentTime=0;
+          msginv.play();
+            });
+
+        socket.on("getuser", function (getuser) {
+          var i=0;
+          var userarr ="";
+          while(i<getuser.length){
+          if(getuser[i]!=null){
+          var user = getuser[i].split(":");
+          userarr += user[0]+"\n";
+          }
+          i++;
+        }
+        document.getElementById("getuser").innerText = userarr;
+            });
+
+        $('#delform').click(function(){
+            socket.emit('delmsg',lastmsg);
+            lastmsg='';
+        });
+
+        socket.on("delmsg",function (msg){
+              if(msg == 'done'){
+              $('li').remove();
+              listval=0;
+              socket.emit('loadmsg');
+              }
+            });
+
+        
+        $('#msgform').click(function(){
+          listval++;
+          var inbox = $('#m').val();
+          if($('#m').val().length>0 && inbox[0]=='#' && inbox[1]=='#' &&inbox[2]=='#'){
+            var inbox1 = inbox.split(" ");
+            var inboxname = inbox1[0].substring(3);
+            var inboxmsg = '';
+            if(name!=inboxname){
+            for(var i=1;i<inbox1.length;i++){
+              inboxmsg += inbox1[i];
+            }
+            socket.emit('inbox',name,inboxname,inboxmsg);
+            }else{
+              $('#messages').append($('<li style="text-align:right;">').text("不要私訊自己那麼自戀好嗎?"));
+            }
+            msgoutv.currentTime=0;
+            msgoutv.play();
+            $('#m').val('');
+          }else if($('#m').val().trim().length>0){
+            if(inbox[0]!='#' && inbox[1]!='#' &&inbox[2]!='#'){
+            lastmsg = name+"  :  "+$('#m').val();
+          }
+            socket.emit('chat message', name ,$('#m').val());
+            $('#m').val('');
+          }else{
+            $('#messages').append($('<li style="text-align:right;">').text("不要輸入空白,伺服器會生氣氣!"));
+            $('#m').val('');
+            }
+            return false;
+        });
+
+        socket.on('chat message', function(msg){
+          var msgmsg = msg.split(":");
+          listval++;
+          if(msgmsg[0].trim()==name){
+            $('#messages').append($('<li style="text-align:right;">').text("我  :  "+msgmsg[1]));
+            msgoutv.currentTime=0;
+            msgoutv.play();
+          }else{
+            $('#messages').append($('<li>').text(msg));
+            msginv.currentTime=0;
+          msginv.play();
+            }
+          window.scrollTo(0, document.body.scrollHeight);
+          
+        });
+      });
+    </script>
+  </body>
+</html>
