@@ -1,17 +1,16 @@
-<script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
-<script src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"></script>
-
-<body style='margin : 0px; overflow: hidden;'>
-  <a-scene embedded arjs='sourceType: webcam;'>
-      <a-marker preset='hiro'>
-        <!-- Adding an OBJ file to an AR Project-->
-        <a-entity 
+<!doctype HTML>
+<html>
+<script src="https://aframe.io/releases/0.9.1/aframe.min.js"></script>
+<script src="https://raw.githack.com/jeromeetienne/AR.js/1.7.1/aframe/build/aframe-ar.js"></script>
+  <body style='margin : 0px; overflow: hidden;'>
+    <a-scene embedded arjs>
+  	<a-marker preset="hiro">
+    <a-entity 
             obj-model="obj: url(../hw6/models/toycar.obj); 
             mtl: url(../hw6/models/toycar.mtl)">
         </a-entity>
-              
-      </a-marker>
-  <a-entity camera>
-  </a-entity>
-  </a-scene>
-</body>
+  	</a-marker>
+  	<a-entity camera></a-entity>
+    </a-scene>
+  </body>
+</html>
